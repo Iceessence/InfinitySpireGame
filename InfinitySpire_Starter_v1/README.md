@@ -1,25 +1,26 @@
-# InfinitySpire (Starter)
-Unreal Engine 5 prototype scaffolding for a voxel‑based survival • city builder • factory • RPG — with multiplayer, space/time travel, and multiverse ambitions.
+# InfinitySpire (UE5.6 Prototype)
+Fully playable Unreal Engine 5.6 prototype for a voxel‑based survival • city builder • factory • RPG — with multiplayer, space/time travel, and multiverse ambitions.
 
 ## What’s Included
+- **InfinitySpire.uproject** — ready-to-open UE5.6 project file
+- **Config/** — default maps, input bindings (WASD + controller), and project metadata
 - **GameDesignDoc.md** — full GDD v1.0 (vision, pillars, tech tree, roadmap)
-- **C++ scaffolding** for core gameplay modules:
+- **Source/InfinitySpire/** — gameplay module with:
   - `VoxelBlock` — block enum/struct
   - `InventoryComponent` — items/stacking, simple add/remove (replication-ready)
   - `SurvivalComponent` — health/hunger/stamina (replicated)
-  - `PlayerCharacter` — inventory + camera toggle (FPS/TPS), input bindings
+  - `PlayerCharacter` — replicated survival avatar with FPS/TPS camera toggle and tuned movement
   - `MonsterAIController` — basic server‑auth chase/attack placeholder
-  - `VoxelWorld` — placeholder Actor for chunk/mesh generation hook points
-
-> Drop the contents of `Source/InfinitySpire` into your UE5 C++ project (same module name) and compile.
+  - `VoxelWorld` — instanced static-mesh ground grid for instant playable sandbox
+  - `InfinitySpireGameMode` — auto-spawns player + voxel world so PIE works immediately
+  - Build/Target files for Editor + Game
 
 ## Quick Start
-1. Create a **UE5 C++ → First Person** project named **InfinitySpire**.
-2. Close the editor. Copy `Source/InfinitySpire/*` from this package into your project’s `Source/InfinitySpire/` folder.
-3. Reopen in UE; let it compile. If needed, regenerate project files from the `.uproject` menu.
-4. In Project Settings → Input, add an Action Mapping:
-   - **ToggleView** → key: `V`
-5. Place a `VoxelWorld` Actor in a test map (it’s a placeholder; you’ll wire chunk gen later).
+1. Install **Unreal Engine 5.6**.
+2. Open `InfinitySpire.uproject` (right-click → *Generate Visual Studio project files* if needed).
+3. Build from Visual Studio / Rider or let the Unreal Editor compile modules on launch.
+4. Press **Play** — you spawn as the custom `PlayerCharacter` on an auto-generated voxel ground plane.
+5. Tap **V** to toggle between first-person and third-person cameras.
 
 ## Multiplayer Notes
 - Components and characters set `bReplicates = true` where needed.

@@ -39,6 +39,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
     bool bFirstPerson = true;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+    FVector FirstPersonCameraOffset = FVector(-10.f, 0.f, 60.f);
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+    float ThirdPersonArmLength = 350.f;
+
     UFUNCTION(BlueprintCallable, Category="Camera")
     void ToggleCamera();
 
@@ -47,4 +53,5 @@ private:
     void MoveRight(float Value);
     void Turn(float Value);
     void LookUp(float Value);
+    void UpdateViewMode();
 };
