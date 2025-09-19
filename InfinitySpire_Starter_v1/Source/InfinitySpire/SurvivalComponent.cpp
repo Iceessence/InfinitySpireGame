@@ -1,4 +1,6 @@
 #include "SurvivalComponent.h"
+#include "GameFramework/Actor.h"
+#include "Net/UnrealNetwork.h"
 
 USurvivalComponent::USurvivalComponent()
 {
@@ -21,24 +23,33 @@ void USurvivalComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 void USurvivalComponent::ApplyDamage(int32 Amount)
 {
-    if (GetOwnerRole() == ROLE_Authority)
+    if (const AActor* Owner = GetOwner())
     {
-        Health = FMath::Clamp(Health - Amount, 0, 100);
+        if (Owner->HasAuthority())
+        {
+            Health = FMath::Clamp(Health - Amount, 0, 100);
+        }
     }
 }
 
 void USurvivalComponent::EatFood(int32 Nutrition)
 {
-    if (GetOwnerRole() == ROLE_Authority)
+    if (const AActor* Owner = GetOwner())
     {
-        Hunger = FMath::Clamp(Hunger - Nutrition, 0, 100);
+        if (Owner->HasAuthority())
+        {
+            Hunger = FMath::Clamp(Hunger - Nutrition, 0, 100);
+        }
     }
 }
 
 void USurvivalComponent::ConsumeStamina(int32 Amount)
 {
-    if (GetOwnerRole() == ROLE_Authority)
+    if (const AActor* Owner = GetOwner())
     {
-        Stamina = FMath::Clamp(Stamina - Amount, 0, 100);
+        if (Owner->HasAuthority())
+        {
+            Stamina = FMath::Clamp(Stamina - Amount, 0, 100);
+        }
     }
 }

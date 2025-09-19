@@ -1,7 +1,10 @@
 #include "PlayerCharacter.h"
-#include "GameFramework/PlayerController.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/SpringArmComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -13,27 +16,33 @@ APlayerCharacter::APlayerCharacter()
 
     // First-person camera
     FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-    FirstPersonCamera->SetupAttachment(GetMesh()); // or RootComponent; adjust in BP as needed
+    FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
+    FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset);
+    FirstPersonCamera->bUsePawnControlRotation = true;
 
     // Third-person camera
     ThirdPersonSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("ThirdPersonSpringArm"));
-    ThirdPersonSpringArm->SetupAttachment(RootComponent);
-    ThirdPersonSpringArm->TargetArmLength = 300.f;
+    ThirdPersonSpringArm->SetupAttachment(GetCapsuleComponent());
+    ThirdPersonSpringArm->TargetArmLength = ThirdPersonArmLength;
     ThirdPersonSpringArm->bUsePawnControlRotation = true;
+    ThirdPersonSpringArm->SetRelativeLocation(FVector(0.f, 0.f, 60.f));
 
     ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
     ThirdPersonCamera->SetupAttachment(ThirdPersonSpringArm, USpringArmComponent::SocketName);
+    ThirdPersonCamera->bUsePawnControlRotation = false;
+
+    if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+    {
+        MoveComp->bOrientRotationToMovement = false;
+    }
+
+    bUseControllerRotationYaw = true;
 }
 
 void APlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
-    // Activate initial camera
-    if (FirstPersonCamera && ThirdPersonCamera)
-    {
-        FirstPersonCamera->SetActive(bFirstPerson);
-        ThirdPersonCamera->SetActive(!bFirstPerson);
-    }
+    UpdateViewMode();
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -82,9 +91,28 @@ void APlayerCharacter::LookUp(float Value)
 void APlayerCharacter::ToggleCamera()
 {
     bFirstPerson = !bFirstPerson;
+    UpdateViewMode();
+}
+
+void APlayerCharacter::UpdateViewMode()
+{
     if (FirstPersonCamera && ThirdPersonCamera)
     {
         FirstPersonCamera->SetActive(bFirstPerson);
         ThirdPersonCamera->SetActive(!bFirstPerson);
+        FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset);
+    }
+
+    if (ThirdPersonSpringArm)
+    {
+        ThirdPersonSpringArm->TargetArmLength = ThirdPersonArmLength;
+        ThirdPersonSpringArm->bUsePawnControlRotation = !bFirstPerson;
+    }
+
+    bUseControllerRotationYaw = bFirstPerson;
+
+    if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+    {
+        MoveComp->bOrientRotationToMovement = !bFirstPerson;
     }
 }

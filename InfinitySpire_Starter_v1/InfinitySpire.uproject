@@ -1,0 +1,17 @@
+{
+    "FileVersion": 3,
+    "EngineAssociation": "5.6",
+    "Category": "",
+    "Description": "InfinitySpire prototype project",
+    "Modules": [
+        {
+            "Name": "InfinitySpire",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        }
+    ],
+    "TargetPlatforms": [
+        "Win64",
+        "Linux"
+    ]
+}

@@ -2,7 +2,6 @@
 #include "CoreMinimal.h"
 #include "VoxelBlock.h"
 #include "Components/ActorComponent.h"
-#include "Net/UnrealNetwork.h"
 #include "InventoryComponent.generated.h"
 
 USTRUCT(BlueprintType)
